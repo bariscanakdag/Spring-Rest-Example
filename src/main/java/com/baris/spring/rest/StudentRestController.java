@@ -1,12 +1,17 @@
 package com.baris.spring.rest;
 
+import com.baris.spring.model.ErrorResponse;
 import com.baris.spring.model.Student;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 @RequestMapping("/api")
 @RestController
@@ -29,12 +34,21 @@ public class StudentRestController {
 
     @GetMapping("/students")
     public List<Student> getStudents() {
-        
+
         return students;
     }
 
     @GetMapping("/students/{studentId}")
     public Student getStudent(@PathVariable int studentId) {
-        return students.get(studentId);
+
+        if (students.size() < studentId || studentId < 0)
+            throw new NotFoundException("Student not found : " + studentId);
+
+        Student student = students.get(studentId);
+
+        return student;
+
+
     }
+
 }
